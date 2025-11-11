@@ -17,15 +17,6 @@ class AutoCpProgramRunner : GenericProgramRunner<RunnerSettings>() {
     override fun getRunnerId(): String {
         return "AutoCpProgramRunner"
     }
-    
-    /**
-     * Override to explicitly declare that AutoCp can run on any ExecutionTarget.
-     * This is critical for bypassing ExecutionTargetManager.doCanRun() checks in CLion.
-     */
-    override fun canRunWithMultipleDevices(executorId: String): Boolean {
-        LOG.warn("AutoCp Debug: canRunWithMultipleDevices() called with executorId: '$executorId', returning true")
-        return true
-    }
 
 //    override fun canRun(executorId: String, profile: RunProfile): Boolean {
 //        LOG.warn("AutoCp Debug: ProgramRunner.canRun called with executorId: '$executorId', profile: ${profile.javaClass.simpleName}")
