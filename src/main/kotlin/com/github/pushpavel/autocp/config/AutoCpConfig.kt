@@ -7,6 +7,9 @@ import com.intellij.execution.configurations.ConfigurationFactory
 import com.intellij.execution.configurations.LocatableConfigurationBase
 import com.intellij.execution.configurations.RunProfileState
 import com.intellij.execution.runners.ExecutionEnvironment
+import com.intellij.execution.target.TargetEnvironmentAwareRunProfile
+import com.intellij.execution.target.TargetEnvironmentConfiguration
+import com.intellij.execution.target.TargetProgressIndicator
 import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializer
 import org.jdom.Element
@@ -14,13 +17,16 @@ import kotlin.io.path.Path
 import kotlin.io.path.nameWithoutExtension
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.execution.ExecutionTarget
-import com.intellij.execution.runners.ExecutionUtil
 
 /**
  * Implementation Class for a Custom Run Configuration that can also be created from context (by right-clicking and run)
+ * 
+ * Implements TargetEnvironmentAwareRunProfile to explicitly declare that AutoCp does not depend on
+ * any ExecutionTarget and should be able to run independently of CMake or other target configurations.
  */
 open class AutoCpConfig(project: Project, factory: ConfigurationFactory, name: String) :
-    LocatableConfigurationBase<RunProfileState>(project, factory, name) {
+    LocatableConfigurationBase<RunProfileState>(project, factory, name), 
+    TargetEnvironmentAwareRunProfile {
     companion object {
         private val LOG = Logger.getInstance(AutoCpConfig::class.java)
     }
@@ -120,6 +126,42 @@ open class AutoCpConfig(project: Project, factory: ConfigurationFactory, name: S
     override fun readExternal(element: Element) {
         super.readExternal(element)
         XmlSerializer.deserializeInto(this, element)
+    }
+
+    // TargetEnvironmentAwareRunProfile implementation
+    
+    /**
+     * Returns false to indicate that AutoCp does not need target environment preparation.
+     * AutoCp runs its own testing process and does not depend on any ExecutionTarget.
+     */
+    override fun needPrepareTarget(): Boolean {
+        LOG.warn("AutoCp Debug: needPrepareTarget() called, returning false")
+        return false
+    }
+
+    /**
+     * Returns true to indicate that AutoCp can run on the local machine.
+     * This allows AutoCp to bypass ExecutionTarget checks.
+     */
+    override fun canRunOn(target: TargetEnvironmentConfiguration): Boolean {
+        LOG.warn("AutoCp Debug: canRunOn(TargetEnvironmentConfiguration) called")
+        return true
+    }
+
+    /**
+     * Returns null as AutoCp does not use a default target name.
+     */
+    override fun getDefaultTargetName(): String? {
+        LOG.warn("AutoCp Debug: getDefaultTargetName() called, returning null")
+        return null
+    }
+
+    /**
+     * Returns null as AutoCp does not require language runtime configuration.
+     */
+    override fun getDefaultLanguage(): String? {
+        LOG.warn("AutoCp Debug: getDefaultLanguage() called, returning null")
+        return null
     }
 
 }
