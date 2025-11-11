@@ -14,6 +14,7 @@ import kotlin.io.path.Path
 import kotlin.io.path.nameWithoutExtension
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.execution.ExecutionTarget
+import com.intellij.execution.runners.ExecutionUtil
 
 /**
  * Implementation Class for a Custom Run Configuration that can also be created from context (by right-clicking and run)
@@ -62,8 +63,13 @@ open class AutoCpConfig(project: Project, factory: ConfigurationFactory, name: S
         LOG.warn("AutoCp Debug: canRunOn(target) class: ${target.javaClass.name}")
         LOG.warn("AutoCp Debug: Current config name: '$name'")
         LOG.warn("AutoCp Debug: Current solutionFilePath: '$solutionFilePath'")
-        // 支持所有执行目标
-        val result = true
+        
+        // AutoCp 只能在默认执行目标上运行，不支持 CMake 的构建配置目标
+        // 检查是否是默认目标（通过检查 ID 是否为 "default" 或 target 是否为 DefaultExecutionTarget）
+        val isDefaultTarget = target.id == "default" || target.javaClass.simpleName == "DefaultExecutionTarget"
+        LOG.warn("AutoCp Debug: Is default target: $isDefaultTarget")
+        
+        val result = isDefaultTarget
         LOG.warn("AutoCp Debug: canRunOn() returning: $result")
         LOG.warn("AutoCp Debug: ========================================")
         return result
