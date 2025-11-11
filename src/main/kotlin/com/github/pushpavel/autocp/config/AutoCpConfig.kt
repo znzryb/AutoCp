@@ -36,12 +36,25 @@ open class AutoCpConfig(project: Project, factory: ConfigurationFactory, name: S
     /**
      * Returns [RunProfileState] that defines the execution of this Run Configuration
      */
-    override fun getState(executor: Executor, environment: ExecutionEnvironment) : RunProfileState {
-        LOG.warn("AutoCp Debug: getState() called")
+    override fun getState(executor: Executor, environment: ExecutionEnvironment) : RunProfileState? {
+        LOG.warn("AutoCp Debug: ========== getState() CALLED ==========")
         LOG.warn("AutoCp Debug: Executor = ${executor.id}")
+        LOG.warn("AutoCp Debug: ExecutionTarget = ${environment.executionTarget?.displayName}")
+        LOG.warn("AutoCp Debug: ExecutionTarget ID = ${environment.executionTarget?.id}")
         LOG.warn("AutoCp Debug: Solution file path = $solutionFilePath")
         LOG.warn("AutoCp Debug: Config name = $name")
-        return AutoCpRunState(project, this)
+        LOG.warn("AutoCp Debug: Runner = ${environment.runner?.runnerId}")
+        
+        // 检查 canRunOn
+        if (environment.executionTarget != null) {
+            val canRun = canRunOn(environment.executionTarget!!)
+            LOG.warn("AutoCp Debug: canRunOn(environment.executionTarget) = $canRun")
+        }
+        
+        LOG.warn("AutoCp Debug: Creating AutoCpRunState...")
+        val state = AutoCpRunState(project, this)
+        LOG.warn("AutoCp Debug: ==========================================")
+        return state
     }
 
     override fun checkConfiguration() {
@@ -64,13 +77,11 @@ open class AutoCpConfig(project: Project, factory: ConfigurationFactory, name: S
         LOG.warn("AutoCp Debug: Current config name: '$name'")
         LOG.warn("AutoCp Debug: Current solutionFilePath: '$solutionFilePath'")
         
-        // AutoCp 只能在默认执行目标上运行，不支持 CMake 的构建配置目标
-        // 检查是否是默认目标（通过检查 ID 是否为 "default" 或 target 是否为 DefaultExecutionTarget）
-        val isDefaultTarget = target.id == "default" || target.javaClass.simpleName == "DefaultExecutionTarget"
-        LOG.warn("AutoCp Debug: Is default target: $isDefaultTarget")
-        
-        val result = isDefaultTarget
-        LOG.warn("AutoCp Debug: canRunOn() returning: $result")
+        // AutoCp 是一个独立的测试运行配置，不依赖于任何特定的 ExecutionTarget
+        // 它应该能在任何 ExecutionTarget 上运行（包括 CMake 的构建配置）
+        // 实际执行时，AutoCp 会使用自己的测试执行逻辑，忽略 ExecutionTarget
+        val result = true
+        LOG.warn("AutoCp Debug: canRunOn() returning: $result (always true - AutoCp is ExecutionTarget-independent)")
         LOG.warn("AutoCp Debug: ========================================")
         return result
     }
