@@ -53,11 +53,23 @@ class AutoCpConfigProducer : LazyRunConfigurationProducer<AutoCpConfig>() {
         
         // 测试 canRunOn 是否在这里被调用
         try {
-            val defaultTarget = ExecutionTargetManager.getInstance(context.project).activeTarget
-            log.warn("AutoCp: Current active ExecutionTarget = ${defaultTarget.displayName} (id=${defaultTarget.id})")
+            val targetManager = ExecutionTargetManager.getInstance(context.project)
+            val activeTarget = targetManager.activeTarget
+            log.warn("AutoCp: Current active ExecutionTarget = ${activeTarget.displayName} (id=${activeTarget.id})")
             log.warn("AutoCp: Testing canRunOn with active target...")
-            val canRun = configuration.canRunOn(defaultTarget)
+            val canRun = configuration.canRunOn(activeTarget)
             log.warn("AutoCp: canRunOn(activeTarget) returned: $canRun")
+            
+            // 如果当前 target 不是默认的，尝试切换到默认 target
+            if (activeTarget.id != "default" && activeTarget.javaClass.simpleName != "DefaultExecutionTarget") {
+                log.warn("AutoCp: Current target is not default, checking for default target...")
+                val defaultTarget = targetManager.targets.find { it.id == "default" || it.javaClass.simpleName == "DefaultExecutionTarget" }
+                if (defaultTarget != null) {
+                    log.warn("AutoCp: Found default target: ${defaultTarget.displayName}")
+                } else {
+                    log.warn("AutoCp: No default target found in available targets: ${targetManager.targets.map { "${it.displayName}(${it.id})" }}")
+                }
+            }
         } catch (e: Exception) {
             log.error("AutoCp: Error testing canRunOn", e)
         }
