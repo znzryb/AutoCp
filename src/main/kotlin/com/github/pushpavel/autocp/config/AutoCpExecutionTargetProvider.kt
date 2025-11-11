@@ -10,7 +10,7 @@ import com.intellij.openapi.project.Project
  * This ensures AutoCp always uses its own execution target instead of
  * the currently selected CMake build target.
  */
-class AutoCpExecutionTargetProvider : ExecutionTargetProvider {
+class AutoCpExecutionTargetProvider : ExecutionTargetProvider() {
     
     override fun getTargets(project: Project, configuration: RunConfiguration): List<ExecutionTarget> {
         // Only provide AutoCp target for AutoCp configurations
