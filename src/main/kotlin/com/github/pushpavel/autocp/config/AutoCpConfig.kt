@@ -165,14 +165,6 @@ open class AutoCpConfig(project: Project, factory: ConfigurationFactory, name: S
     }
 
     /**
-     * Returns null as AutoCp does not require language runtime configuration.
-     */
-    override fun getDefaultLanguage(): String? {
-        LOG.warn("AutoCp Debug: getDefaultLanguage() called, returning null")
-        return null
-    }
-
-    /**
      * Returns null as AutoCp does not require a language runtime type.
      */
     override fun getDefaultLanguageRuntimeType(): LanguageRuntimeType<*>? {
