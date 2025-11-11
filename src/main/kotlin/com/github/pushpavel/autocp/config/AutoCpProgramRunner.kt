@@ -1,11 +1,7 @@
 package com.github.pushpavel.autocp.config
 
-import com.intellij.execution.ExecutionTarget
 import com.intellij.execution.configurations.RunProfile
 import com.intellij.execution.configurations.RunnerSettings
-import com.intellij.execution.executors.DefaultDebugExecutor
-import com.intellij.execution.executors.DefaultRunExecutor
-import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.execution.runners.GenericProgramRunner
 import com.intellij.openapi.diagnostic.Logger
 
@@ -57,21 +53,5 @@ class AutoCpProgramRunner : GenericProgramRunner<RunnerSettings>() {
         LOG.warn("AutoCp Debug: ProgramRunner.canRun returning: $result")
         LOG.warn("AutoCp Debug: =====================================================")
         return result
-    }
-    
-    override fun execute(environment: ExecutionEnvironment) {
-        LOG.warn("AutoCp Debug: ========== ProgramRunner.execute() CALLED ==========")
-        LOG.warn("AutoCp Debug: Executor: '${environment.executor.id}'")
-        LOG.warn("AutoCp Debug: ExecutionTarget: '${environment.executionTarget?.displayName}'")
-        LOG.warn("AutoCp Debug: ExecutionTarget ID: '${environment.executionTarget?.id}'")
-        LOG.warn("AutoCp Debug: RunProfile: ${environment.runProfile.javaClass.simpleName}")
-        
-        try {
-            super.execute(environment)
-            LOG.warn("AutoCp Debug: ProgramRunner.execute() completed successfully")
-        } catch (e: Exception) {
-            LOG.error("AutoCp Debug: ProgramRunner.execute() failed with exception", e)
-            throw e
-        }
     }
 }
