@@ -9,7 +9,7 @@ import com.intellij.execution.configurations.RunProfileState
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.execution.target.TargetEnvironmentAwareRunProfile
 import com.intellij.execution.target.TargetEnvironmentConfiguration
-import com.intellij.execution.target.TargetProgressIndicator
+import com.intellij.execution.target.LanguageRuntimeType
 import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializer
 import org.jdom.Element
@@ -157,10 +157,26 @@ open class AutoCpConfig(project: Project, factory: ConfigurationFactory, name: S
     }
 
     /**
+     * Sets the default target name. AutoCp does not use this, so this is a no-op.
+     */
+    override fun setDefaultTargetName(targetName: String?) {
+        LOG.warn("AutoCp Debug: setDefaultTargetName() called with: $targetName (ignored)")
+        // No-op: AutoCp does not use target names
+    }
+
+    /**
      * Returns null as AutoCp does not require language runtime configuration.
      */
     override fun getDefaultLanguage(): String? {
         LOG.warn("AutoCp Debug: getDefaultLanguage() called, returning null")
+        return null
+    }
+
+    /**
+     * Returns null as AutoCp does not require a language runtime type.
+     */
+    override fun getDefaultLanguageRuntimeType(): LanguageRuntimeType<*>? {
+        LOG.warn("AutoCp Debug: getDefaultLanguageRuntimeType() called, returning null")
         return null
     }
 
