@@ -48,7 +48,7 @@ class AutoCpConfigProducer : LazyRunConfigurationProducer<AutoCpConfig>() {
         log.warn("AutoCp: Config name = ${configuration.name}")
         log.warn("AutoCp: Config type = ${configuration.type.displayName}")
         log.warn("AutoCp: Config factory = ${configuration.factory}")
-        log.warn("AutoCp: Config factory ID = ${configuration.factory.id}")
+        log.warn("AutoCp: Config ID = ${configuration.id}")
         log.warn("AutoCp: Config class = ${configuration.javaClass.name}")
         
         // 测试 canRunOn 是否在这里被调用
