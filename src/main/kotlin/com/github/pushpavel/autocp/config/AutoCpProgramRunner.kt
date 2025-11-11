@@ -48,7 +48,7 @@ class AutoCpProgramRunner : GenericProgramRunner<RunnerSettings>() {
             LOG.warn("AutoCp Debug: Config solutionFilePath: '${config.solutionFilePath}'")
         }
 
-        // 临时：对所有执行器都支持 AutoCpConfig
+        // Support AutoCpConfig for all executors
         val result = isAutoConfig
         LOG.warn("AutoCp Debug: ProgramRunner.canRun returning: $result")
         LOG.warn("AutoCp Debug: =====================================================")
