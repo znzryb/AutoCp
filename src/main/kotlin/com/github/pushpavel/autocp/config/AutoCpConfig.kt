@@ -24,6 +24,10 @@ open class AutoCpConfig(project: Project, factory: ConfigurationFactory, name: S
         private val LOG = Logger.getInstance(AutoCpConfig::class.java)
     }
 
+    init {
+        LOG.warn("AutoCp Debug: AutoCpConfig instance created, name='$name', factory='${factory.id}'")
+    }
+
     var solutionFilePath: String = ""
 
     private val solutionFiles = SolutionFiles.getInstance(project)
@@ -52,9 +56,17 @@ open class AutoCpConfig(project: Project, factory: ConfigurationFactory, name: S
     }
 
     override fun canRunOn(target: ExecutionTarget): Boolean {
-        LOG.warn("AutoCp Debug: canRunOn(target) called with: ${target.displayName}")
+        LOG.warn("AutoCp Debug: ========== canRunOn() CALLED ==========")
+        LOG.warn("AutoCp Debug: canRunOn(target) with displayName: '${target.displayName}'")
+        LOG.warn("AutoCp Debug: canRunOn(target) with id: '${target.id}'")
+        LOG.warn("AutoCp Debug: canRunOn(target) class: ${target.javaClass.name}")
+        LOG.warn("AutoCp Debug: Current config name: '$name'")
+        LOG.warn("AutoCp Debug: Current solutionFilePath: '$solutionFilePath'")
         // 支持所有执行目标
-        return true
+        val result = true
+        LOG.warn("AutoCp Debug: canRunOn() returning: $result")
+        LOG.warn("AutoCp Debug: ========================================")
+        return result
     }
 
 
